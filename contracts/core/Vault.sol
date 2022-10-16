@@ -22,6 +22,7 @@ contract Vault is ReentrancyGuard, IVault {
         uint256 collateral;
         uint256 averagePrice;
         uint256 entryFundingRate;
+        // sizeDelta / minPrice
         uint256 reserveAmount;
         int256 realisedPnl;
         uint256 lastIncreasedTime;
@@ -98,9 +99,11 @@ contract Vault is ReentrancyGuard, IVault {
     mapping(address => uint256) public override tokenWeights;
 
     // usdgAmounts tracks the amount of USDG debt for each whitelisted token
+    // ??? Difference between usdgAmounts and poolAmounts
     mapping(address => uint256) public override usdgAmounts;
 
     // maxUsdgAmounts allows setting a max amount of USDG debt for a token
+    // ??? Why limit the amount of usdg
     mapping(address => uint256) public override maxUsdgAmounts;
 
     // poolAmounts tracks the number of received tokens that can be used for leverage

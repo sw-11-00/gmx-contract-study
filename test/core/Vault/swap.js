@@ -137,10 +137,12 @@ describe("Vault.swap", function () {
     const tx = await vault.connect(user1).swap(bnb.address, btc.address, user2.address)
     await reportGasUsed(provider, tx, "swap gas used")
 
+    // The price of amount in is the lowest price used, and the price of amount out is the highest price used
+    // Therefore, the exchanged amount will be correspondingly less.
     expect(await glpManager.getAumInUsdg(false)).eq(expandDecimals(167520, 18)) // 159520 + (100 * 400) - 32000
 
     expect(await btc.balanceOf(user1.address)).eq(0)
-    expect(await btc.balanceOf(user2.address)).eq(expandDecimals(4, 7).sub("120000")) // 0.8 - 0.0012
+    expect(await btc.balanceOf(user2.address)).eq(expandDecimals(4, 7).sub("120000")) // 0.4 - 0.0012
 
     expect(await vault.feeReserves(bnb.address)).eq("600000000000000000") // 200 * 0.3% => 0.6
     expect(await vault.usdgAmounts(bnb.address)).eq(expandDecimals(100 * 400, 18).add(expandDecimals(200 * 300, 18)).sub(expandDecimals(180, 18)))

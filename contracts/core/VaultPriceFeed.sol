@@ -334,7 +334,6 @@ contract VaultPriceFeed is IVaultPriceFeed {
         require(price > 0, "VaultPriceFeed: could not fetch price");
         // normalise price precision
         uint256 _priceDecimals = priceDecimals[_token];
-        console.log("getPrimaryPrice ", price);
         return price.mul(PRICE_PRECISION).div(10 ** _priceDecimals);
     }
 

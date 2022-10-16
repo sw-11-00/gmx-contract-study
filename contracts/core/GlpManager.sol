@@ -10,6 +10,7 @@ import "./interfaces/IGlpManager.sol";
 import "../tokens/interfaces/IUSDG.sol";
 import "../tokens/interfaces/IMintable.sol";
 import "../access/Governable.sol";
+import "hardhat/console.sol";
 
 pragma solidity 0.6.12;
 
@@ -26,13 +27,14 @@ contract GlpManager is ReentrancyGuard, Governable, IGlpManager {
     address public glp;
 
     uint256 public override cooldownDuration;
-    mapping (address => uint256) public override lastAddedAt;
+    mapping(address => uint256) public override lastAddedAt;
 
+    // ？？？what is the effect
     uint256 public aumAddition;
     uint256 public aumDeduction;
 
     bool public inPrivateMode;
-    mapping (address => bool) public isHandler;
+    mapping(address => bool) public isHandler;
 
     event AddLiquidity(
         address account,
@@ -81,7 +83,7 @@ contract GlpManager is ReentrancyGuard, Governable, IGlpManager {
     }
 
     function addLiquidity(address _token, uint256 _amount, uint256 _minUsdg, uint256 _minGlp) external override nonReentrant returns (uint256) {
-        if (inPrivateMode) { revert("GlpManager: action not enabled"); }
+        if (inPrivateMode) {revert("GlpManager: action not enabled");}
         return _addLiquidity(msg.sender, msg.sender, _token, _amount, _minUsdg, _minGlp);
     }
 
@@ -91,7 +93,7 @@ contract GlpManager is ReentrancyGuard, Governable, IGlpManager {
     }
 
     function removeLiquidity(address _tokenOut, uint256 _glpAmount, uint256 _minOut, address _receiver) external override nonReentrant returns (uint256) {
-        if (inPrivateMode) { revert("GlpManager: action not enabled"); }
+        if (inPrivateMode) {revert("GlpManager: action not enabled");}
         return _removeLiquidity(msg.sender, _tokenOut, _glpAmount, _minOut, _receiver);
     }
 
@@ -154,6 +156,7 @@ contract GlpManager is ReentrancyGuard, Governable, IGlpManager {
         }
 
         aum = shortProfits > aum ? 0 : aum.sub(shortProfits);
+        console.log("aum is ", aum);
         return aumDeduction > aum ? 0 : aum.sub(aumDeduction);
     }
 
